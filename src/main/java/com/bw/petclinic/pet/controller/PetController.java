@@ -38,9 +38,9 @@ public class PetController {
     }
 
     @GetMapping("/pets/types")
-    public List<String> getPetTypes() {
+    public List<PetType> getPetTypes() {
         LOG.info("GET /pets/types");
-        return petRepository.findPetTypes().stream().map(PetType::getName).toList();
+        return petRepository.findPetTypes();
     }
 
     @GetMapping("/pets/pet")
