@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS pets;
+DROP TABLE IF EXISTS pet_types;
+
+CREATE TABLE IF NOT EXISTS pet_types (
+  id INT(4) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(80),
+  INDEX(name)
+) engine=InnoDB;
+
+CREATE TABLE IF NOT EXISTS pets (
+  id INT(4) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(30),
+  birth_date DATE,
+  pet_type_id INT(4) UNSIGNED NOT NULL,
+  owner_id INT(4) UNSIGNED NOT NULL,
+  INDEX(name),
+  FOREIGN KEY (pet_type_id) REFERENCES pet_types(id)
+) engine=InnoDB;
+
