@@ -33,7 +33,7 @@ public class PetController {
         return petRepository.findByOwnerId(ownerId).stream().map(Pet::getName).collect(Collectors.joining(", "));
     }
 
-    @GetMapping("/pets")
+    @GetMapping("/pets/owner")
     public List<Pet> getPets(@RequestParam("ownerId") int ownerId) {
         LOG.info("GET /pets with ownerId [" + ownerId + "]");
         return petRepository.findByOwnerId(ownerId);
@@ -43,6 +43,12 @@ public class PetController {
     public List<String> getPetTypes() {
         LOG.info("GET /pets/types");
         return petRepository.findPetTypes().stream().map(PetType::getName).toList();
+    }
+
+    @GetMapping("/pets/pet")
+    public Pet getPet(@RequestParam("id") int id) {
+        LOG.info("GET /pets with id [" + id + "]");
+        return petRepository.findById(id).orElseGet(Pet::new);
     }
 
 }
