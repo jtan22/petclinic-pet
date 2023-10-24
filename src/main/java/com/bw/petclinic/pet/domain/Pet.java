@@ -50,7 +50,7 @@ public class Pet extends NamedEntity {
                 "birthDate=" + birthDate +
                 ", type=" + type +
                 ", ownerId=" + ownerId +
-                super.toString() +
+                ", super=" + super.toString() +
                 '}';
     }
 }

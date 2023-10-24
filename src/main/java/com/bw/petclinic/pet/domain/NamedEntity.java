@@ -21,7 +21,7 @@ public abstract class NamedEntity extends BaseEntity {
     public String toString() {
         return "NamedEntity{" +
                 "name='" + name + '\'' +
-                super.toString() +
+                ", super=" + super.toString() +
                 '}';
     }
 }
