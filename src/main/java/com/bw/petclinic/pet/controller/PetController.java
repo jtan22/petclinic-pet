@@ -6,9 +6,7 @@ import com.bw.petclinic.pet.repository.PetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,6 +47,12 @@ public class PetController {
     public Pet getPet(@RequestParam("id") int id) {
         LOG.info("GET /pets with id [" + id + "]");
         return petRepository.findById(id).orElseGet(Pet::new);
+    }
+
+    @PostMapping("/pets/pet")
+    public Pet savePet(@RequestBody Pet pet) {
+        LOG.info("POST /pets/pet with Pet [" + pet + "]");
+        return petRepository.save(pet);
     }
 
 }
