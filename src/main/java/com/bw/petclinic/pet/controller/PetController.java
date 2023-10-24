@@ -1,6 +1,7 @@
 package com.bw.petclinic.pet.controller;
 
 import com.bw.petclinic.pet.domain.Pet;
+import com.bw.petclinic.pet.domain.PetType;
 import com.bw.petclinic.pet.repository.PetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,12 @@ public class PetController {
     public List<Pet> getPets(@RequestParam("ownerId") int ownerId) {
         LOG.info("GET /pets with ownerId [" + ownerId + "]");
         return petRepository.findByOwnerId(ownerId);
+    }
+
+    @GetMapping("/pets/types")
+    public List<String> getPetTypes() {
+        LOG.info("GET /pets/types");
+        return petRepository.findPetTypes().stream().map(PetType::getName).toList();
     }
 
 }
