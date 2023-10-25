@@ -19,36 +19,72 @@ public class PetController {
     @Autowired
     private PetRepository petRepository;
 
+    /**
+     * Health check.
+     *
+     * @return
+     */
     @GetMapping("/")
     public String welcome() {
         LOG.info("GET /");
         return "welcome";
     }
 
+    /**
+     * Get all pets' names for a given ownerId.
+     *
+     * @param ownerId
+     * @return
+     */
     @GetMapping("/pets/names")
     public String getPetNames(@RequestParam("ownerId") int ownerId) {
         LOG.info("GET /pets/names with ownerId [" + ownerId + "]");
-        return petRepository.findByOwnerId(ownerId).stream().map(Pet::getName).collect(Collectors.joining(", "));
+        return petRepository.findByOwnerId(ownerId).stream().
+                map(Pet::getName).
+                collect(Collectors.joining(", "));
     }
 
+    /**
+     * Get all pets for a given ownerId.
+     *
+     * @param ownerId
+     * @return
+     */
     @GetMapping("/pets/owner")
     public List<Pet> getPets(@RequestParam("ownerId") int ownerId) {
         LOG.info("GET /pets with ownerId [" + ownerId + "]");
         return petRepository.findByOwnerId(ownerId);
     }
 
+    /**
+     * Get all PetTypes.
+     *
+     * @return
+     */
     @GetMapping("/pets/types")
     public List<PetType> getPetTypes() {
         LOG.info("GET /pets/types");
         return petRepository.findPetTypes();
     }
 
+    /**
+     * Get a single Pet by its id.
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/pets/pet")
     public Pet getPet(@RequestParam("id") int id) {
         LOG.info("GET /pets with id [" + id + "]");
         return petRepository.findById(id).orElseGet(Pet::new);
     }
 
+    /**
+     * Save a single Pet.
+     *
+     * @param pet
+     * @return
+     */
     @PostMapping("/pets/pet")
     public Pet savePet(@RequestBody Pet pet) {
         LOG.info("POST /pets/pet with Pet [" + pet + "]");
