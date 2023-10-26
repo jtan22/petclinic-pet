@@ -6,9 +6,13 @@ import com.bw.petclinic.pet.repository.PetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -43,7 +47,7 @@ public class PetController {
     @GetMapping("/pets/names")
     public String getPetNames(@RequestParam("ownerId") int ownerId) {
         LOG.info("GET /pets/names with ownerId [" + ownerId + "]");
-        return petRepository.findByOwnerId(ownerId).stream().
+        return getPets(ownerId).stream().
                 map(Pet::getName).
                 collect(Collectors.joining(", "));
     }
@@ -57,7 +61,11 @@ public class PetController {
     @GetMapping("/pets/owner")
     public List<Pet> getPets(@RequestParam("ownerId") int ownerId) {
         LOG.info("GET /pets with ownerId [" + ownerId + "]");
-        return petRepository.findByOwnerId(ownerId);
+        List<Pet> pets = petRepository.findByOwnerId(ownerId);
+        if (pets.isEmpty()) {
+            throw new PetNotFoundException("Pets not found for owner [" + ownerId + "]");
+        }
+        return pets;
     }
 
     /**
@@ -68,7 +76,11 @@ public class PetController {
     @GetMapping("/pets/types")
     public List<PetType> getPetTypes() {
         LOG.info("GET /pets/types");
-        return petRepository.findPetTypes();
+        List<PetType> petTypes = petRepository.findPetTypes();
+        if (petTypes.isEmpty()) {
+            throw new PetNotFoundException("PetTypes not found");
+        }
+        return petTypes;
     }
 
     /**
@@ -80,7 +92,11 @@ public class PetController {
     @GetMapping("/pets/pet")
     public Pet getPet(@RequestParam("id") int id) {
         LOG.info("GET /pets with id [" + id + "]");
-        return petRepository.findById(id).orElseGet(Pet::new);
+        Optional<Pet> pet = petRepository.findById(id);
+        if (pet.isPresent()) {
+            return pet.get();
+        }
+        throw new PetNotFoundException("Pet [" + id + "] not found");
     }
 
     /**
@@ -93,6 +109,12 @@ public class PetController {
     public Pet savePet(@RequestBody Pet pet) {
         LOG.info("POST /pets/pet with Pet [" + pet + "]");
         return petRepository.save(pet);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<PetErrorResponse> handlePetNotFoundException(PetNotFoundException e) {
+        PetErrorResponse response = new PetErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
 }
