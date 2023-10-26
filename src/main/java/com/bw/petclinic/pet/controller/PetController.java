@@ -61,11 +61,7 @@ public class PetController {
     @GetMapping("/pets/owner")
     public List<Pet> getPets(@RequestParam("ownerId") int ownerId) {
         LOG.info("GET /pets with ownerId [" + ownerId + "]");
-        List<Pet> pets = petRepository.findByOwnerId(ownerId);
-        if (pets.isEmpty()) {
-            throw new PetNotFoundException("Pets not found for owner [" + ownerId + "]");
-        }
-        return pets;
+        return petRepository.findByOwnerId(ownerId);
     }
 
     /**
@@ -76,11 +72,7 @@ public class PetController {
     @GetMapping("/pets/types")
     public List<PetType> getPetTypes() {
         LOG.info("GET /pets/types");
-        List<PetType> petTypes = petRepository.findPetTypes();
-        if (petTypes.isEmpty()) {
-            throw new PetNotFoundException("PetTypes not found");
-        }
-        return petTypes;
+        return petRepository.findPetTypes();
     }
 
     /**
