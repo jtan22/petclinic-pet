@@ -16,8 +16,12 @@ public class PetController {
 
     private static final Logger LOG = LoggerFactory.getLogger(PetController.class);
 
+    private final PetRepository petRepository;
+
     @Autowired
-    private PetRepository petRepository;
+    public PetController(PetRepository petRepository) {
+        this.petRepository = petRepository;
+    }
 
     /**
      * Health check.
